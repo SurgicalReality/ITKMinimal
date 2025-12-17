@@ -38,7 +38,7 @@ elseif(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0") 
     message("Hardcoded to use deployment target 11.0")
 elseif(UNIX)
-    add_link_options("-static-libstdc++" "-static-libgcc")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
     message("Hardcoded static C++ runtime linkage")
 endif()
 
