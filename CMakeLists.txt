@@ -30,6 +30,14 @@ foreach(pold "")
   endif()
 endforeach()
 
+if(WIN32)
+    # cmake_policy(SET CMP0091 NEW)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set(ITK_USE_MSVC_STATIC_RUNTIME_LIBRARY ON CACHE BOOL "Use static CRT" FORCE)
+    message("Hardcoded to use static CRT")
+endif()
+
+
 # ====
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKInitializeCXXStandard.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMake/ITKInitializeBuildType.cmake)
@@ -126,19 +134,7 @@ endif()
 include(CTest)
 mark_as_advanced(CLEAR BUILD_TESTING)
 
-if(MSVC) #-- Configure MSVC_STATIC_RUNTIME only if using MSVC environment
-  option(ITK_MSVC_STATIC_RUNTIME_LIBRARY "Link to MSVC's static CRT (/MT and /MTd).
-OFF (default) means link to regular, dynamic CRT (/MD and /MDd)." OFF)
-  mark_as_advanced(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
-  set(ITK_MSVC_STATIC_RUNTIME_LIBRARY_value ${ITK_MSVC_STATIC_RUNTIME_LIBRARY})
-  if(ITK_MSVC_STATIC_RUNTIME_LIBRARY)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    message(STATUS "Using MSVC's static CRT (/MT and /MTd)")
-  else()
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-    message(STATUS "Using MSVC's dynamic CRT (/MD and /MDd)")
-  endif()
-
+if(MSVC)
   # Enable multi-processing compilation for visual studio.
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /MP")
