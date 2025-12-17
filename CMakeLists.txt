@@ -31,10 +31,15 @@ foreach(pold "")
 endforeach()
 
 if(WIN32)
-    # cmake_policy(SET CMP0091 NEW)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     set(ITK_USE_MSVC_STATIC_RUNTIME_LIBRARY ON CACHE BOOL "Use static CRT" FORCE)
     message("Hardcoded to use static CRT")
+elseif(APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0") 
+    message("Hardcoded to use deployment target 11.0")
+elseif(UNIX)
+    add_link_options("-static-libstdc++" "-static-libgcc")
+    message("Hardcoded static C++ runtime linkage")
 endif()
 
 
